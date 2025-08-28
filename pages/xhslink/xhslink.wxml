@@ -1,0 +1,27 @@
+<wxs module="tools">
+  module.exports = {
+    jsonFormat: function(obj) {
+      try {
+        return JSON.stringify(obj, null, 2);
+      } catch (e) {
+        return '';
+      }
+    }
+  }
+</wxs>
+<view class="container">
+  <view class="title">小红书链接解析</view>
+  <input class="input" placeholder="请粘贴小红书分享内容" bindinput="onInput" />
+  <button class="btn" bindtap="onParse">提取链接</button>
+  <view class="result" wx:if="{{link}}">
+    <text>提取到的链接：</text>
+    <text selectable="true">{{link}}</text>
+  </view>
+  <view class="result" wx:if="{{loading}}">
+    <text>正在请求接口，请稍候...</text>
+  </view>
+  <view class="result" wx:if="{{apiResult}}">
+    <text>接口返回：</text>
+    <text selectable="true">{{tools.jsonFormat(apiResult)}}</text>
+  </view>
+</view>
