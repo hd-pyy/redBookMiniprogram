@@ -1,0 +1,36 @@
+.container {
+  padding: 40rpx;
+}
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 40rpx;
+}
+.empty {
+  color: #888;
+  text-align: center;
+  margin-top: 60rpx;
+}
+.item {
+  background: #f7f7f7;
+  border-radius: 8rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  font-size: 28rpx;
+  color: #333;
+  cursor: pointer;
+  position: relative;
+}
+.item button {
+  background: #3cb371 !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 6rpx;
+  font-size: 26rpx;
+  padding: 8rpx 24rpx;
+  margin-left: 20rpx;
+  transition: background 0.2s;
+}
+.item button:active {
+  background: #249150 !important;
+}

@@ -1,0 +1,10 @@
+<view class="container">
+  <view class="title">历史解析记录</view>
+  <view wx:if="{{historyList.length === 0}}" class="empty">暂无历史记录</view>
+  <block wx:for="{{historyList}}" wx:key="index">
+    <view class="item" style="display:flex;align-items:center;justify-content:space-between;gap:20rpx;">
+      <text style="flex:1;word-break:break-all;">{{item}}</text>
+      <button type="primary" size="mini" data-content="{{item}}" bindtap="onItemParse" style="background:#3cb371;min-width:120rpx;">再次解析</button>
+    </view>
+  </block>
+</view>
