@@ -77,7 +77,15 @@ function jsonFormat(obj) {
             }
             
             this.setData({ apiResult: res.data, loading: false });
-            
+            // 存储历史记录
+            if (this.data.inputValue) {
+              let history = wx.getStorageSync('xhs_history') || [];
+              if (!history.includes(this.data.inputValue)) {
+                history.unshift(this.data.inputValue);
+                if (history.length > 50) history = history.slice(0, 50);
+                wx.setStorageSync('xhs_history', history);
+              }
+            }
             if (res.data && res.data.code === -4) {
               wx.showToast({
                 title: '当前接口请求频率过高，或服务器IP已被封禁，请稍后重试！',
@@ -103,6 +111,15 @@ function jsonFormat(obj) {
     },
   
     onShow() {
+      // 兼容 tabBar switchTab 传值
+      const content = wx.getStorageSync('xhslink_content');
+      if (content) {
+        this.setData({ inputValue: content });
+        setTimeout(() => {
+          this.onParse();
+          wx.removeStorageSync('xhslink_content');
+        }, 100);
+      }
       if (typeof wx !== 'undefined' && wx && wx.nextTick) {
         wx.nextTick(() => {
           if (!this.jsonFormatRegistered) {
