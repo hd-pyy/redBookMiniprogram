@@ -22,6 +22,11 @@
   font-size: 30rpx;
   width: 100%;
   margin-bottom: 30rpx;
+  transition: background 0.5s;
+}
+.btn:active {
+  background-color: #d81e3a;
+  opacity: 0.85;
 }
 .result {
   font-size: 28rpx;

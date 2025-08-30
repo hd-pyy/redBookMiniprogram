@@ -1,9 +1,26 @@
 {
   "pages": [
     "pages/xhslink/xhslink",
-    "pages/index/index",
-    "pages/logs/logs"
+    "pages/history/history"
+
   ],
+  "tabBar": {
+    "list": [
+        {
+            "pagePath": "pages/xhslink/xhslink",
+            "text": "小红书解析",
+            "iconPath": "images/5.png",
+            "selectedIconPath": "images/5_fill.png"
+          },
+      {
+        "pagePath": "pages/history/history",
+        "text": "历史解析",
+        "iconPath": "images/1.png",
+        "selectedIconPath": "images/1_fill.png"
+      }
+
+    ]
+  },
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "Weixin",
