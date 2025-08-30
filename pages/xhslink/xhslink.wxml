@@ -39,12 +39,11 @@
 
   <view class="result" wx:if="{{apiResult && !loading}}">
 
-
+<!-- 视频展示 -->
     <view wx:if="{{apiResult.data && apiResult.data.type === '视频'}}" class="video-section">
       <view style="margin: 20rpx 0; font-weight: bold;">视频内容：</view>
-      
-      <view wx:if="{{apiResult.data.cover}}" style="margin-bottom: 20rpx;">
-        <image class="video-cover" src="{{apiResult.data.cover}}" mode="aspectFit" style="width: 100%; max-height: 400rpx; border-radius: 8rpx;"></image>
+      <view wx:if="{{apiResult.data.cover}}" style="margin-bottom: 20rpx; padding: 0 32rpx; box-sizing: border-box;">
+        <image class="video-cover" src="{{apiResult.data.cover}}" mode="aspectFit" style="width: 100%; max-height: 800rpx; min-height: 320rpx; border-radius: 8rpx; display: block;"></image>
       </view>
       
       <view wx:if="{{isDownloading}}" class="progress-container">
@@ -52,15 +51,7 @@
           <text>正在下载视频...</text>
           <text class="progress-text">{{downloadProgress}}%</text>
         </view>
-        
-        <!-- <view class="progress-details">
-          <text class="size-info">{{tools.formatFileSize(downloadedSize)}} / {{tools.formatFileSize(totalSize)}}</text>
-          <text class="speed-info">{{tools.formatFileSize(downloadSpeed)}}/s</text>
-          <text wx:if="{{downloadSpeed > 0 && totalSize > downloadedSize}}" class="time-info">
-            剩余: {{tools.formatTime((totalSize - downloadedSize) / downloadSpeed)}}
-          </text>
-        </view> -->
-        
+    
         <view class="progress-bar">
           <view class="progress-fill" style="transform: scaleX({{downloadProgress / 100}});"></view>
         </view>
@@ -69,11 +60,11 @@
       </view>
       
       <view class="video-actions" wx:if="{{!isDownloading}}">
-        <button class="btn video-btn" bindtap="onPreviewVideo">预览视频</button>
         <button class="btn download-btn" bindtap="onDownloadVideo">下载视频</button>
       </view>
     </view>
 
+<!-- 图文展示 -->
     <view wx:if="{{apiResult.data && apiResult.data.type === '图文' && apiResult.data.images && apiResult.data.images.length}}" class="images-section">
       <view style="margin: 20rpx 0; font-weight: bold;">图片预览：</view>
       <button class="btn download-all-btn" bindtap="onDownloadAllImages">一键下载全部图片</button>
