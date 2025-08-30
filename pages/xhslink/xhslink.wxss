@@ -1,36 +1,220 @@
 .container {
-  padding: 40rpx;
-}
-.title {
-  font-size: 36rpx;
-  font-weight: bold;
-  margin-bottom: 40rpx;
-}
-.input {
-  border: 1px solid #ddd;
-  border-radius: 8rpx;
-  padding: 20rpx;
-  font-size: 28rpx;
-  margin-bottom: 30rpx;
-}
-.btn {
-  background-color: #ff2442;
-  color: #fff;
-  border: none;
-  border-radius: 8rpx;
-  padding: 20rpx 0;
-  font-size: 30rpx;
-  width: 100%;
-  margin-bottom: 30rpx;
-  transition: background 0.5s;
-}
-.btn:active {
-  background-color: #d81e3a;
-  opacity: 0.85;
-}
-.result {
-  font-size: 28rpx;
-  color: #333;
-  margin-top: 20rpx;
-  word-break: break-all;
-}
+    padding: 40rpx;
+  }
+  .title {
+    font-size: 36rpx;
+    font-weight: bold;
+    margin-bottom: 40rpx;
+  }
+  .input {
+    border: 1px solid #ddd;
+    border-radius: 8rpx;
+    padding: 20rpx;
+    font-size: 28rpx;
+    margin-bottom: 30rpx;
+  }
+  .btn {
+    background-color: #ff2442;
+    color: #fff;
+    border: none;
+    border-radius: 8rpx;
+    padding: 20rpx 0;
+    font-size: 30rpx;
+    width: 100%;
+    margin-bottom: 30rpx;
+    transition: background 0.5s;
+  }
+  .btn:active {
+    background-color: #d81e3a;
+    opacity: 0.85;
+  }
+  .result {
+    font-size: 28rpx;
+    color: #333;
+    margin-top: 20rpx;
+    word-break: break-all;
+  }
+  
+  
+  .info-section {
+    margin-bottom: 30rpx;
+  }
+  
+  .info-item {
+    display: flex;
+    margin-bottom: 16rpx;
+    align-items: flex-start;
+  }
+  
+  .label {
+    font-weight: bold;
+    color: #333;
+    min-width: 100rpx;
+    margin-right: 10rpx;
+  }
+  
+  .value {
+    color: #666;
+    flex: 1;
+  }
+  
+  .video-section {
+    margin-top: 30rpx;
+  }
+  
+  .video-cover {
+    width: 100%;
+    border-radius: 8rpx;
+    box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
+  }
+  
+  .video-actions {
+    display: flex;
+    gap: 20rpx;
+    margin-top: 20rpx;
+  }
+  
+  .video-btn {
+    flex: 1;
+    background: #1976d2;
+  }
+  
+  .download-btn {
+    flex: 1;
+    background: #07c160;
+  }
+  
+  .download-all-btn {
+    background: #07c160;
+    margin-bottom: 20rpx;
+  }
+  
+  .images-section {
+    margin-top: 30rpx;
+  }
+  
+  .images-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10rpx;
+  }
+  
+  .image-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10rpx;
+  }
+  
+  .image-preview {
+    width: 200rpx;
+    height: 200rpx;
+    object-fit: cover;
+    border-radius: 8rpx;
+    border: 1px solid #eee;
+    box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
+  }
+  
+  .image-download-btn {
+    background: #f0f0f0;
+    color: #333;
+    border: 1rpx solid #ddd;
+    margin-top: 8rpx;
+    font-size: 24rpx;
+  }
+  
+  .image-download-btn:active {
+    background: #e0e0e0;
+  }
+  
+  /* 进度条样式 */
+  .progress-container {
+    margin: 20rpx 0;
+    padding: 30rpx;
+    background: #f8f8f8;
+    border-radius: 12rpx;
+    border: 2rpx solid #e0e0e0;
+  }
+  
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15rpx;
+  }
+  
+  .progress-info text {
+    font-size: 28rpx;
+    color: #333;
+  }
+  
+  .progress-text {
+    font-weight: bold;
+    color: #07c160;
+  }
+  
+  .progress-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+    flex-wrap: wrap;
+    gap: 10rpx;
+  }
+  
+  .size-info, .speed-info, .time-info {
+    font-size: 24rpx;
+    color: #666;
+  }
+  
+  .time-info {
+    color: #999;
+  }
+  
+  .progress-bar {
+    width: 100%;
+    height: 12rpx;
+    background: #e0e0e0;
+    border-radius: 6rpx;
+    overflow: hidden;
+    margin-bottom: 20rpx;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #07c160, #38d973);
+    border-radius: 6rpx;
+    transition: transform 0.3s ease;
+    transform-origin: left center;
+    transform: scaleX(0);
+  }
+  
+  .cancel-btn {
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 16rpx 32rpx;
+    border-radius: 8rpx;
+    font-size: 26rpx;
+    width: 100%;
+  }
+  
+  .cancel-btn:active {
+    background: #ff3742;
+  }
+  
+  .debug-section {
+    margin-top: 40rpx;
+  }
+  
+  .debug-title {
+    font-size: 28rpx;
+    color: #666;
+    margin-bottom: 10rpx;
+  }
+  
+  .debug-content {
+    font-size: 24rpx;
+    color: #999;
+  }
+  

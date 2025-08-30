@@ -6,30 +6,79 @@
       } catch (e) {
         return '';
       }
+    },
+    formatFileSize: function(bytes) {
+      if (bytes === 0) return '0 B';
+      var k = 1024;
+      var sizes = ['B', 'KB', 'MB', 'GB'];
+      var i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    },
+    formatTime: function(seconds) {
+      if (seconds <= 0) return '计算中...';
+      if (seconds < 60) return Math.round(seconds) + '秒';
+      var minutes = Math.floor(seconds / 60);
+      return minutes + '分' + Math.round(seconds % 60) + '秒';
     }
   }
 </wxs>
+
 <view class="container">
   <view style="display:flex;gap:20rpx;">
     <input class="input" placeholder="请粘贴小红书分享内容" bindinput="onInput" value="{{inputValue}}" style="flex:1;" />
   </view>
+  
   <view style="display:flex;gap:20rpx;">
     <button class="btn" style="flex:1;" bindtap="onParse">提取链接</button>
     <button class="btn" style="flex:1;background:#bbb;" bindtap="onClear">清空输入</button>
   </view>
-  <view class="result" wx:if="{{link}}">
-  </view>
+
   <view class="result" wx:if="{{loading}}">
     <text>正在请求接口，请稍候...</text>
   </view>
-  <view class="result" wx:if="{{apiResult}}">
-    <text selectable="true">{{tools.jsonFormat(apiResult)}}</text>
-  </view>
 
-  <view class="result" wx:if="{{apiResult.data && apiResult.data.images && apiResult.data.images.length}}">
-    <view style="margin-top: 20rpx; font-weight: bold;">图片预览：</view>
-    <button class="btn" style="margin-bottom: 20rpx;" bindtap="onDownloadAllImages">一键下载全部图片</button>
-    <view style="display: flex; flex-wrap: wrap;">
+  <view class="result" wx:if="{{apiResult && !loading}}">
+
+
+    <view wx:if="{{apiResult.data && apiResult.data.type === '视频'}}" class="video-section">
+      <view style="margin: 20rpx 0; font-weight: bold;">视频内容：</view>
+      
+      <view wx:if="{{apiResult.data.cover}}" style="margin-bottom: 20rpx;">
+        <image class="video-cover" src="{{apiResult.data.cover}}" mode="aspectFit" style="width: 100%; max-height: 400rpx; border-radius: 8rpx;"></image>
+      </view>
+      
+      <view wx:if="{{isDownloading}}" class="progress-container">
+        <view class="progress-info">
+          <text>正在下载视频...</text>
+          <text class="progress-text">{{downloadProgress}}%</text>
+        </view>
+        
+        <!-- <view class="progress-details">
+          <text class="size-info">{{tools.formatFileSize(downloadedSize)}} / {{tools.formatFileSize(totalSize)}}</text>
+          <text class="speed-info">{{tools.formatFileSize(downloadSpeed)}}/s</text>
+          <text wx:if="{{downloadSpeed > 0 && totalSize > downloadedSize}}" class="time-info">
+            剩余: {{tools.formatTime((totalSize - downloadedSize) / downloadSpeed)}}
+          </text>
+        </view> -->
+        
+        <view class="progress-bar">
+          <view class="progress-fill" style="transform: scaleX({{downloadProgress / 100}});"></view>
+        </view>
+        
+        <button class="cancel-btn" bindtap="onCancelDownload">取消下载</button>
+      </view>
+      
+      <view class="video-actions" wx:if="{{!isDownloading}}">
+        <button class="btn video-btn" bindtap="onPreviewVideo">预览视频</button>
+        <button class="btn download-btn" bindtap="onDownloadVideo">下载视频</button>
+      </view>
+    </view>
+
+    <view wx:if="{{apiResult.data && apiResult.data.type === '图文' && apiResult.data.images && apiResult.data.images.length}}" class="images-section">
+      <view style="margin: 20rpx 0; font-weight: bold;">图片预览：</view>
+      <button class="btn download-all-btn" bindtap="onDownloadAllImages">一键下载全部图片</button>
+
+      <view style="display: flex; flex-wrap: wrap;">
       <block wx:for="{{apiResult.data.images}}" wx:key="index">
         <view style="margin: 10rpx; display: flex; flex-direction: column; align-items: center;">
           <image src="{{item}}" style="width: 200rpx; height: 200rpx; object-fit: cover; border-radius: 8rpx; border: 1px solid #eee;" mode="aspectFill" />
@@ -37,5 +86,11 @@
         </view>
       </block>
     </view>
+    </view>
+
+    <!-- <view class="debug-section">
+      <view class="debug-title">调试信息：</view>
+      <text selectable="true" class="debug-content">{{tools.jsonFormat(apiResult)}}</text>
+    </view> -->
   </view>
 </view>

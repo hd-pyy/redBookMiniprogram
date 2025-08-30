@@ -1,0 +1,41 @@
+<wxs module="tools">
+  module.exports = {
+    jsonFormat: function(obj) {
+      try {
+        return JSON.stringify(obj, null, 2);
+      } catch (e) {
+        return '';
+      }
+    }
+  }
+</wxs>
+<view class="container">
+  <view style="display:flex;gap:20rpx;">
+    <input class="input" placeholder="请粘贴小红书分享内容" bindinput="onInput" value="{{inputValue}}" style="flex:1;" />
+  </view>
+  <view style="display:flex;gap:20rpx;">
+    <button class="btn" style="flex:1;" bindtap="onParse">提取链接</button>
+    <button class="btn" style="flex:1;background:#bbb;" bindtap="onClear">清空输入</button>
+  </view>
+  <view class="result" wx:if="{{link}}">
+  </view>
+  <view class="result" wx:if="{{loading}}">
+    <text>正在请求接口，请稍候...</text>
+  </view>
+  <view class="result" wx:if="{{apiResult}}">
+    <text selectable="true">{{tools.jsonFormat(apiResult)}}</text>
+  </view>
+
+  <view class="result" wx:if="{{apiResult.data && apiResult.data.images && apiResult.data.images.length}}">
+    <view style="margin-top: 20rpx; font-weight: bold;">图片预览：</view>
+    <button class="btn" style="margin-bottom: 20rpx;" bindtap="onDownloadAllImages">一键下载全部图片</button>
+    <view style="display: flex; flex-wrap: wrap;">
+      <block wx:for="{{apiResult.data.images}}" wx:key="index">
+        <view style="margin: 10rpx; display: flex; flex-direction: column; align-items: center;">
+          <image src="{{item}}" style="width: 200rpx; height: 200rpx; object-fit: cover; border-radius: 8rpx; border: 1px solid #eee;" mode="aspectFill" />
+          <button size="mini" style="margin-top: 8rpx;" data-url="{{item}}" bindtap="onDownloadImage">下载</button>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>
