@@ -196,9 +196,10 @@ sudo apt-get install -y nodejs
 ```
 mkdir wechat-image-proxy
 cd wechat-image-proxy
-```
 [root@hcss-ecs-7ab5 wechat-image-proxy]# pwd
 /root/wechat-image-proxy
+
+```
 
 ## 3. 初始化项目并安装依赖
 
