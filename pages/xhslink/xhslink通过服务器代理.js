@@ -1,3 +1,5 @@
+const config = require('../../config');
+
 Page({
   data: {
     inputValue: '',
@@ -10,7 +12,7 @@ Page({
   convertImageUrl(url) {
     if (!url) return url;
     // 将原始链接转换为通过你的服务器代理的HTTPS链接
-    return `https://xhs-service.xgbb.xyz/proxy-image?url=${encodeURIComponent(url)}`;
+    return `${config.proxyImageUrl}?url=${encodeURIComponent(url)}`;
   },
   
   onInput(e) {
@@ -28,7 +30,7 @@ Page({
       this.setData({ link, loading: true, apiResult: null });
       
       wx.request({
-        url: `https://api.mu-jie.cc/xhs`,
+        url: config.xhsApiUrl,
         method: 'GET',
         data: { url: link },
         success: (res) => {
