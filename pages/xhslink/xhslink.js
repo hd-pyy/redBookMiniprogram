@@ -286,7 +286,7 @@ function jsonFormat(obj) {
           downloadAndSave();
         }
       });
-    }
+    },
   
     _downloadAndSaveVideo(url) {
       const startDownload = () => {
