@@ -217,6 +217,8 @@ npm install -g pm2
 ## 4. 创建服务器文件
 
 创建 `server.js` 文件：
+touch server.js
+
 
 ```
 
