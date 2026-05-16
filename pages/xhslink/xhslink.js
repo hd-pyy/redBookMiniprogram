@@ -21,12 +21,12 @@ function jsonFormat(obj) {
   
     convertImageUrl(url) {
       if (!url) return url;
-      return `https://xhs-service.xgbb.xyz/proxy-image?url=${encodeURIComponent(url)}`;
+      return `http://localhost:3000/proxy-image?url=${encodeURIComponent(url)}`;
     },
   
     convertVideoUrl(url) {
       if (!url) return url;
-      return `https://xhs-service.xgbb.xyz/proxy-video?url=${encodeURIComponent(url)}`;
+      return `124.223.44.71:3000/proxy-video?url=${encodeURIComponent(url)}`;
     },
   
     onInput(e) {

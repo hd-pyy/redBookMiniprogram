@@ -3,7 +3,7 @@
   "projectname": "redBookMiniprogram",
   "setting": {
     "compileHotReLoad": true,
-    "urlCheck": true
+    "urlCheck": false
   },
   "condition": {
     "miniprogram": {
