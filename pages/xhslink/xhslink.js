@@ -1,3 +1,5 @@
+const config = require('../../utils/config.js');
+
 function jsonFormat(obj) {
     try {
       return JSON.stringify(obj, null, 2);
@@ -5,7 +7,7 @@ function jsonFormat(obj) {
       return '';
     }
   }
-  
+
   Page({
     data: {
       inputValue: '',
@@ -18,15 +20,15 @@ function jsonFormat(obj) {
       totalSize: 0,
       downloadSpeed: 0
     },
-  
+
     convertImageUrl(url) {
       if (!url) return url;
-      return `http://localhost:3000/proxy-image?url=${encodeURIComponent(url)}`;
+      return `${config.proxy.image}${encodeURIComponent(url)}`;
     },
-  
+
     convertVideoUrl(url) {
       if (!url) return url;
-      return `124.223.44.71:3000/proxy-video?url=${encodeURIComponent(url)}`;
+      return `${config.proxy.video}${encodeURIComponent(url)}`;
     },
   
     onInput(e) {
@@ -58,7 +60,7 @@ function jsonFormat(obj) {
         this.setData({ link, loading: true, apiResult: null });
         
         wx.request({
-          url: `https://api.mu-jie.cc/xhs`,
+          url: `${config.api.baseUrl}${config.api.xhs}`,
           method: 'GET',
           data: { url: link },
           success: (res) => {
