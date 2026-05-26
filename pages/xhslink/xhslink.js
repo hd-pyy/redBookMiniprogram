@@ -200,6 +200,15 @@ function jsonFormat(obj) {
       });
     },
   
+    onShareAppMessage() {
+      const data = this.data.apiResult && this.data.apiResult.data;
+      return {
+        title: data && data.title ? data.title : '小红书内容',
+        path: '/pages/xhslink/xhslink',
+        imageUrl: data && data.cover ? data.cover : ''
+      };
+    },
+
     _checkAndRequestPermission(scope, callback) {
       wx.getSetting({
         success: (res) => {

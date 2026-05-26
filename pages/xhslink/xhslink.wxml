@@ -61,6 +61,7 @@
       
       <view class="video-actions" wx:if="{{!isDownloading}}">
         <button class="btn download-btn" bindtap="onDownloadVideo">下载视频</button>
+        <button class="btn share-btn" open-type="share" wx:if="{{apiResult.data && apiResult.data.url}}">转发视频</button>
       </view>
     </view>
 
