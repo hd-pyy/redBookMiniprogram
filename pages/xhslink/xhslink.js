@@ -200,118 +200,148 @@ function jsonFormat(obj) {
       });
     },
   
+    _checkAndRequestPermission(scope, callback) {
+      wx.getSetting({
+        success: (res) => {
+          if (!res.authSetting[scope]) {
+            wx.authorize({
+              scope,
+              success: () => callback(true),
+              fail: () => {
+                wx.showToast({ title: '请授权保存权限', icon: 'none' });
+                callback(false);
+              }
+            });
+          } else {
+            callback(true);
+          }
+        }
+      });
+    },
+
     _downloadAndSaveImage(url, silent) {
       return new Promise((resolve) => {
-        wx.downloadFile({
-          url,
-          success: (res) => {
-            if (res.statusCode === 200) {
-              wx.saveImageToPhotosAlbum({
-                filePath: res.tempFilePath,
-                success: () => {
-                  if (!silent) wx.showToast({ title: '保存成功', icon: 'success' });
-                  resolve();
-                },
-                fail: (err) => {
-                  if (!silent) wx.showToast({ title: '保存失败，请检查相册权限', icon: 'none' });
-                  console.error('保存图片失败', err);
-                  resolve();
-                }
-              });
-            } else {
+        this._checkAndRequestPermission('scope.writePhotosAlbum', (granted) => {
+          if (!granted) { resolve(); return; }
+
+          wx.downloadFile({
+            url,
+            success: (res) => {
+              if (res.statusCode === 200) {
+                wx.saveImageToPhotosAlbum({
+                  filePath: res.tempFilePath,
+                  success: () => {
+                    if (!silent) wx.showToast({ title: '保存成功', icon: 'success' });
+                    resolve();
+                  },
+                  fail: (err) => {
+                    if (!silent) wx.showToast({ title: '保存失败，请检查相册权限', icon: 'none' });
+                    console.error('保存图片失败', err);
+                    resolve();
+                  }
+                });
+              } else {
+                if (!silent) wx.showToast({ title: '下载失败', icon: 'none' });
+                resolve();
+              }
+            },
+            fail: (err) => {
               if (!silent) wx.showToast({ title: '下载失败', icon: 'none' });
+              console.error('下载失败', err);
               resolve();
             }
-          },
-          fail: (err) => {
-            if (!silent) wx.showToast({ title: '下载失败', icon: 'none' });
-            console.error('下载失败', err);
-            resolve();
-          }
+          });
         });
       });
     },
   
     _downloadAndSaveVideo(url) {
-      this.setData({ 
-        isDownloading: true, 
-        downloadProgress: 0,
-        downloadedSize: 0,
-        totalSize: 0,
-        downloadSpeed: 0
-      });
-      
-      let startTime = Date.now();
-      let retryCount = 0;
-      const maxRetries = 2;
-      
-      const attemptDownload = () => {
-        this.downloadTask = wx.downloadFile({
-          url,
-          timeout: 300000, // 5分钟超时
-          success: (res) => {
-            this.setData({ 
-              isDownloading: false,
-              downloadProgress: 0,
-              downloadedSize: 0,
-              totalSize: 0,
-              downloadSpeed: 0
-            });
-            
-            if (res.statusCode === 200) {
-              wx.saveVideoToPhotosAlbum({
-                filePath: res.tempFilePath,
-                success: () => {
-                  wx.showToast({ title: '视频保存成功', icon: 'success' });
-                },
-                fail: (err) => {
-                  console.error('保存视频失败', err);
-                  wx.showToast({ title: '保存视频失败，请检查相册权限', icon: 'none' });
-                }
-              });
-            } else {
-              wx.showToast({ title: '视频下载失败', icon: 'none' });
-            }
-          },
-          fail: (err) => {
-            console.error('下载失败:', err);
-            
-            if (retryCount < maxRetries) {
-              retryCount++;
-              wx.showToast({ 
-                title: `下载失败，正在重试 ${retryCount}/${maxRetries}`, 
-                icon: 'none' 
-              });
-              setTimeout(() => attemptDownload(), 3000);
-              return;
-            }
-            
-            this.setData({ 
-              isDownloading: false,
-              downloadProgress: 0,
-              downloadedSize: 0,
-              totalSize: 0,
-              downloadSpeed: 0
-            });
-            wx.showToast({ title: '下载失败，请检查网络后重试', icon: 'none' });
-          }
+      this._checkAndRequestPermission('scope.writePhotosAlbum', (granted) => {
+        if (!granted) {
+          this.setData({ isDownloading: false, downloadProgress: 0, downloadedSize: 0, totalSize: 0, downloadSpeed: 0 });
+          return;
+        }
+
+        this.setData({
+          isDownloading: true,
+          downloadProgress: 0,
+          downloadedSize: 0,
+          totalSize: 0,
+          downloadSpeed: 0
         });
-  
-        this.downloadTask.onProgressUpdate((res) => {
-          const currentTime = Date.now();
-          const elapsedTime = (currentTime - startTime) / 1000;
-          const speed = elapsedTime > 0 ? (res.bytesWritten || 0) / elapsedTime : 0;
-          
-          this.setData({
-            downloadProgress: res.progress || 0,
-            downloadedSize: res.bytesWritten || 0,
-            totalSize: res.totalBytesExpectedToWrite || 0,
-            downloadSpeed: speed
+
+        let startTime = Date.now();
+        let retryCount = 0;
+        const maxRetries = 2;
+
+        const attemptDownload = () => {
+          this.downloadTask = wx.downloadFile({
+            url,
+            timeout: 300000,
+            success: (res) => {
+              this.setData({
+                isDownloading: false,
+                downloadProgress: 0,
+                downloadedSize: 0,
+                totalSize: 0,
+                downloadSpeed: 0
+              });
+
+              if (res.statusCode === 200) {
+                wx.saveVideoToPhotosAlbum({
+                  filePath: res.tempFilePath,
+                  success: () => {
+                    wx.showToast({ title: '视频保存成功', icon: 'success' });
+                  },
+                  fail: (err) => {
+                    console.error('保存视频失败', err);
+                    wx.showToast({ title: '保存视频失败，请检查相册权限', icon: 'none' });
+                  }
+                });
+              } else {
+                wx.showToast({ title: '视频下载失败', icon: 'none' });
+              }
+            },
+            fail: (err) => {
+              console.error('下载失败:', err);
+
+              if (retryCount < maxRetries) {
+                retryCount++;
+                wx.showToast({
+                  title: `下载失败，正在重试 ${retryCount}/${maxRetries}`,
+                  icon: 'none'
+                });
+                setTimeout(() => attemptDownload(), 3000);
+                return;
+              }
+
+              this.setData({
+                isDownloading: false,
+                downloadProgress: 0,
+                downloadedSize: 0,
+                totalSize: 0,
+                downloadSpeed: 0
+              });
+              wx.showToast({ title: '下载失败，请检查网络后重试', icon: 'none' });
+            }
           });
-        });
-      };
-  
-      attemptDownload();
+
+          this.downloadTask.onProgressUpdate((res) => {
+            const currentTime = Date.now();
+            const elapsedTime = (currentTime - startTime) / 1000;
+            const speed = elapsedTime > 0 ? (res.bytesWritten || 0) / elapsedTime : 0;
+
+            this.setData({
+              downloadProgress: res.progress || 0,
+              downloadedSize: res.bytesWritten || 0,
+              totalSize: res.totalBytesExpectedToWrite || 0,
+              downloadSpeed: speed
+            });
+          });
+        };
+
+        attemptDownload();
+      });
     }
   });
   
