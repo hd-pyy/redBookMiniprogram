@@ -212,7 +212,14 @@ function jsonFormat(obj) {
     _checkAndRequestPermission(scope, callback) {
       wx.getSetting({
         success: (res) => {
-          if (!res.authSetting[scope]) {
+          const authStatus = res.authSetting[scope];
+
+          if (authStatus === true) {
+            callback(true);
+            return;
+          }
+
+          if (authStatus === undefined) {
             wx.authorize({
               scope,
               success: () => callback(true),
@@ -221,9 +228,31 @@ function jsonFormat(obj) {
                 callback(false);
               }
             });
-          } else {
-            callback(true);
+            return;
           }
+
+          wx.showModal({
+            title: '需要保存权限',
+            content: '请在设置中打开保存到相册权限',
+            confirmText: '去设置',
+            success: (modalRes) => {
+              if (!modalRes.confirm) {
+                callback(false);
+                return;
+              }
+
+              wx.openSetting({
+                success: (settingRes) => {
+                  callback(settingRes.authSetting[scope] === true);
+                },
+                fail: () => callback(false)
+              });
+            }
+          });
+        },
+        fail: () => {
+          wx.showToast({ title: '获取权限状态失败', icon: 'none' });
+          callback(false);
         }
       });
     },
@@ -353,4 +382,3 @@ function jsonFormat(obj) {
       });
     }
   });
-  
